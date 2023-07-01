@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Http\Resources\SkillResource;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Skill;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 class SkillController extends Controller
 {
@@ -14,7 +19,8 @@ class SkillController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Skills/Index');
+        $skills = SkillResource::collection(Skill::all());
+        return Inertia::render('Skills/Index', compact('skills'));
     }
 
     /**
@@ -24,7 +30,7 @@ class SkillController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Skills/Create');
     }
 
     /**
@@ -33,9 +39,22 @@ class SkillController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        //
+        $req->validate([
+            'name' => 'required',
+            'image' => 'required|image'
+        ]);
+
+        if ($req->hasFile('image')) {
+            $image = $req->file('image')->store('skills');
+            Skill::create([
+                'name' => $req->name,
+                'image' => $image
+            ]);
+            return Redirect::route('skills.index');
+        };
+        return Redirect::back();
     }
 
     /**
@@ -44,9 +63,8 @@ class SkillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Skill $skill)
     {
-        //
     }
 
     /**
@@ -55,9 +73,11 @@ class SkillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Skill $skill)
     {
-        //
+        //Besok kita coba cari cara buat paka resource
+        // $skl = SkillResource::collection(Skill::where('id', '=', $skill->id));
+        return Inertia::render('Skills/Edit', compact('skill'));
     }
 
     /**
@@ -67,9 +87,24 @@ class SkillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $req, Skill $skill)
     {
-        //
+        $image = $skill->image;
+        $req->validate([
+            'name' => ['required']
+        ]);
+
+        if ($req->hasFile('image')) {
+            Storage::delete($skill->image);
+            $image = $req->file('image')->store('skills');
+        }
+
+        $skill->update([
+            'name' => $req->name,
+            'image' => $image
+        ]);
+
+        return Redirect::route('skills.index');
     }
 
     /**

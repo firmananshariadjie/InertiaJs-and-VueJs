@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProjectResource;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Project;
+use App\Models\Skill;
+use Illuminate\Support\Facades\Redirect;
 
 class ProjectController extends Controller
 {
@@ -14,7 +18,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Projects/Index');
+        $projects = ProjectResource::collection(Project::with('skill')->get());
+        return Inertia::render('Projects/Index', compact('projects'));
     }
 
     /**
@@ -24,7 +29,8 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        $skills = Skill::all();
+        return Inertia::render('Projects/Create', compact('skills'));
     }
 
     /**
@@ -33,9 +39,25 @@ class ProjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        //
+        $req->validate([
+            'name' => 'required',
+            'image' => 'required|image',
+            'skill_id' => 'required',
+        ]);
+
+        if ($req->hasFile('image')) {
+            $image = $req->file('image')->store('projects');
+            Project::create([
+                'name' => $req->name,
+                'image' => $image,
+                'skill_id' => $req->skill_id,
+                'proeject_url' => $req->proeject_url
+            ]);
+            return Redirect::route('projects.index');
+        };
+        return Redirect::back();
     }
 
     /**
