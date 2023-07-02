@@ -68,12 +68,11 @@ console.log(imagePreview);
                                 >
                                     {{ skill.name }}
                                 </option>
-
-                                <InputError
-                                    class="mt-2"
-                                    :message="form.errors.skill_id"
-                                />
                             </select>
+                            <InputError
+                                class="mt-2"
+                                :message="$page.props.errors.skill_id"
+                            />
                         </div>
 
                         <div class="pt-2">
@@ -90,7 +89,7 @@ console.log(imagePreview);
 
                             <InputError
                                 class="mt-2"
-                                :message="form.errors.name"
+                                :message="$page.props.errors.name"
                             />
                         </div>
 
@@ -106,7 +105,7 @@ console.log(imagePreview);
 
                             <InputError
                                 class="mt-2"
-                                :message="form.errors.proeject_url"
+                                :message="$page.props.errors.proeject_url"
                             />
                         </div>
 
@@ -118,6 +117,7 @@ console.log(imagePreview);
                                 type="file"
                                 class="mt-1 block w-full"
                                 @input="handleImageUpload"
+                                required
                             />
                             <InputLabel
                                 v-if="imagePreview"
@@ -132,7 +132,7 @@ console.log(imagePreview);
                             />
                             <InputError
                                 class="mt-2"
-                                :message="form.errors.image"
+                                :message="$page.props.errors.image"
                             />
                         </div>
 

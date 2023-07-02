@@ -57,7 +57,7 @@ class ProjectController extends Controller
                 'skill_id' => $req->skill_id,
                 'proeject_url' => $req->proeject_url
             ]);
-            return Redirect::route('projects.index');
+            return Redirect::route('projects.index')->with('message', 'Project Created Successsfully.');
         };
         return Redirect::back();
     }
@@ -112,7 +112,7 @@ class ProjectController extends Controller
             'skill_id' => $req->skill_id
         ]);
 
-        return Redirect::route('projects.index');
+        return Redirect::route('projects.index')->with('message', 'Project Updated Successsfully.');
     }
 
     /**
@@ -125,6 +125,6 @@ class ProjectController extends Controller
     {
         Storage::delete($project->image);
         $project->delete();
-        return Redirect::back();
+        return Redirect::back()->with('message', 'Project Deleted Successsfully.');
     }
 }

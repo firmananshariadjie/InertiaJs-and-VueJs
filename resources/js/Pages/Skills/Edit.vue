@@ -68,7 +68,10 @@ console.log(imagePreview);
                             v-value="skill.name"
                         />
 
-                        <InputError class="mt-2" :message="form.errors.name" />
+                        <InputError
+                            class="mt-2"
+                            :message="$page.props.errors.name"
+                        />
                     </div>
                     <div class="pt-2">
                         <InputLabel for="image" value="Image" />
@@ -81,6 +84,7 @@ console.log(imagePreview);
                             type="file"
                             class="mt-1 block w-full"
                             @input="handleImageUpload"
+                            required
                         />
                         <InputLabel
                             v-if="imagePreview"
@@ -94,7 +98,10 @@ console.log(imagePreview);
                             class="w-12 h-12 rounded-full"
                         />
 
-                        <InputError class="mt-2" :message="form.errors.image" />
+                        <InputError
+                            class="mt-2"
+                            :message="$page.props.errors.image"
+                        />
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
