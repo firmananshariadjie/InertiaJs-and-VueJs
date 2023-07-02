@@ -6,22 +6,30 @@ import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
+import { router } from "@inertiajs/vue3";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 
-defineProps({
+const props = defineProps({
+    project: Object,
     skills: Array,
 });
 
 const form = useForm({
-    name: "",
+    name: props.project?.name,
     image: null,
-    proeject_url: "",
-    skill_id: "",
+    skill_id: props.project?.skill_id,
+    proeject_url: props.project.proeject_url,
 });
 
 const submit = () => {
-    form.post(route("projects.store"));
+    router.post(`/projects/${props.project.id}`, {
+        _method: "put",
+        name: form.name,
+        image: form.image,
+        skill_id: form.skill_id,
+        proeject_url: form.proeject_url,
+    });
 };
 
 const imagePreview = ref(null);
@@ -39,12 +47,12 @@ console.log(imagePreview);
 </script>
 
 <template>
-    <Head title="Create Project" />
+    <Head title="Edit Project" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Create Project
+                Edit Project
             </h2>
         </template>
 
@@ -53,12 +61,11 @@ console.log(imagePreview);
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <form @submit.prevent="submit" class="p-4">
                         <div class="pt-2">
-                            <InputLabel for="skill_id" value="Name Skill" />
+                            <InputLabel for="skill_id" value="name" />
                             <select
                                 v-model="form.skill_id"
                                 name="skill_id"
                                 id="skill_id"
-                                required
                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indogo-500 focus:ring-border-indigo-500 sm:text-sm rounded-md"
                             >
                                 <option
@@ -68,11 +75,6 @@ console.log(imagePreview);
                                 >
                                     {{ skill.name }}
                                 </option>
-
-                                <InputError
-                                    class="mt-2"
-                                    :message="form.errors.skill_id"
-                                />
                             </select>
                         </div>
 
@@ -85,6 +87,7 @@ console.log(imagePreview);
                                 class="mt-1 block w-full"
                                 v-model="form.name"
                                 required
+                                v-value="form.name"
                                 autocomplete="name"
                             />
 
@@ -102,6 +105,7 @@ console.log(imagePreview);
                                 type="text"
                                 class="mt-1 block w-full"
                                 v-model="form.proeject_url"
+                                v-value="form.proeject_url"
                             />
 
                             <InputError
@@ -112,7 +116,10 @@ console.log(imagePreview);
 
                         <div class="pt-2">
                             <InputLabel for="image" value="Image" />
-
+                            <img
+                                :src="'/storage/' + project.image"
+                                class="w-12 h-12 rounded-full"
+                            />
                             <TextInput
                                 id="image"
                                 type="file"
@@ -130,6 +137,7 @@ console.log(imagePreview);
                                 alt="Preview"
                                 class="w-12 h-12 rounded-full"
                             />
+
                             <InputError
                                 class="mt-2"
                                 :message="form.errors.image"

@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use App\Models\Project;
 use App\Models\Skill;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+
 
 class ProjectController extends Controller
 {
@@ -77,9 +79,10 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Project $project)
     {
-        //
+        $skills = Skill::all();
+        return Inertia::render('Projects/Edit', compact('project', 'skills'));
     }
 
     /**
@@ -89,9 +92,27 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $req, Project $project)
     {
-        //
+        $image = $project->image;
+        $req->validate([
+            'name' => 'required',
+            'skill_id' => 'required',
+        ]);
+
+        if ($req->hasFile('image')) {
+            Storage::delete($project->image);
+            $image = $req->file('image')->store('projects');
+        }
+
+        $project->update([
+            'name' => $req->name,
+            'image' => $image,
+            'proeject_url' => $req->proeject_url,
+            'skill_id' => $req->skill_id
+        ]);
+
+        return Redirect::route('projects.index');
     }
 
     /**
@@ -100,8 +121,10 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Project $project)
     {
-        //
+        Storage::delete($project->image);
+        $project->delete();
+        return Redirect::back();
     }
 }

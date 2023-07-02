@@ -6,9 +6,9 @@ import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
-// import { Inertia } from "@inertiajs/inertia";
 import { router } from "@inertiajs/vue3";
 import { Head, Link, useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
 
 const props = defineProps({
     skill: Object,
@@ -23,9 +23,22 @@ const submit = () => {
     router.post(`/skills/${props.skill.id}`, {
         _method: "put",
         name: form.name,
-        image: FormData.image,
+        image: form.image,
     });
 };
+
+const imagePreview = ref(null);
+const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    form.image = file;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        imagePreview.value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+};
+console.log(imagePreview);
 </script>
 
 <template>
@@ -60,14 +73,25 @@ const submit = () => {
                     <div class="pt-2">
                         <InputLabel for="image" value="Image" />
                         <img
-                            :src="skill.image"
+                            :src="'/storage/' + skill.image"
                             class="w-12 h-12 rounded-full"
                         />
                         <TextInput
                             id="image"
                             type="file"
                             class="mt-1 block w-full"
-                            @input="form.image = $event.target.files[0]"
+                            @input="handleImageUpload"
+                        />
+                        <InputLabel
+                            v-if="imagePreview"
+                            for="preview"
+                            value="Image Preview"
+                        />
+                        <img
+                            v-if="imagePreview"
+                            :src="imagePreview"
+                            alt="Preview"
+                            class="w-12 h-12 rounded-full"
                         />
 
                         <InputError class="mt-2" :message="form.errors.image" />

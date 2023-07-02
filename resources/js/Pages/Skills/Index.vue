@@ -59,11 +59,10 @@ defineProps({
                                     {{ skill.name }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    <!-- besok caari cara supaya gambar nya tampil di edit -->
-                                    <!-- <img
+                                    <img
                                         :src="skill.image"
                                         class="w-12 h-12 rounded-full"
-                                    /> -->
+                                    />
                                 </td>
                                 <td class="px-6 py-4">
                                     <Link
@@ -76,7 +75,7 @@ defineProps({
                                         :href="
                                             route('skills.destroy', skill.id)
                                         "
-                                        :method="delete"
+                                        method="delete"
                                         as="button"
                                         type="button"
                                         class="font-medium text-red-500 hover:text-red-700"

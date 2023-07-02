@@ -40,6 +40,7 @@ defineProps({
                                 <th scope="col" class="px-6 py-3">No</th>
                                 <th scope="col" class="px-6 py-3">Name</th>
                                 <th scope="col" class="px-6 py-3">Skill</th>
+                                <th scope="col" class="px-6 py-3">URL</th>
                                 <th scope="col" class="px-6 py-3">Image</th>
                                 <th scope="col" class="px-6 py-3">Action</th>
                             </tr>
@@ -63,13 +64,42 @@ defineProps({
                                 >
                                     {{ project.skill.name }}
                                 </th>
+                                <th
+                                    scope="row"
+                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                >
+                                    {{ project.proeject_url }}
+                                </th>
                                 <td class="px-6 py-4">
                                     <img
                                         :src="project.image"
                                         class="w-12 h-12 rounded-full"
                                     />
                                 </td>
-                                <td class="px-6 py-4">edit/delete</td>
+                                <td class="px-6 py-4">
+                                    <Link
+                                        :href="
+                                            route('projects.edit', project.id)
+                                        "
+                                        class="font-medium text-blue-500 hover:text-blue-700"
+                                    >
+                                        Edit
+                                    </Link>
+                                    <Link
+                                        :href="
+                                            route(
+                                                'projects.destroy',
+                                                project.id
+                                            )
+                                        "
+                                        method="delete"
+                                        as="button"
+                                        type="button"
+                                        class="font-medium text-red-500 hover:text-red-700"
+                                    >
+                                        Delete
+                                    </Link>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

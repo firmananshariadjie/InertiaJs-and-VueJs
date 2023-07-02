@@ -75,8 +75,6 @@ class SkillController extends Controller
      */
     public function edit(Skill $skill)
     {
-        //Besok kita coba cari cara buat paka resource
-        // $skl = SkillResource::collection(Skill::where('id', '=', $skill->id));
         return Inertia::render('Skills/Edit', compact('skill'));
     }
 
@@ -91,7 +89,7 @@ class SkillController extends Controller
     {
         $image = $skill->image;
         $req->validate([
-            'name' => ['required']
+            'name' => 'required'
         ]);
 
         if ($req->hasFile('image')) {
@@ -113,8 +111,10 @@ class SkillController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Skill $skill)
     {
-        //
+        Storage::delete($skill->image);
+        $skill->delete();
+        return Redirect::back();
     }
 }
