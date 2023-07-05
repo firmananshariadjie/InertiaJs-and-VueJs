@@ -90,7 +90,6 @@ console.log(imagePreview);
                             :message="$page.props.errors.image"
                         />
                     </div>
-
                     <div class="flex items-center justify-end mt-4">
                         <PrimaryButton
                             class="ml-4"
