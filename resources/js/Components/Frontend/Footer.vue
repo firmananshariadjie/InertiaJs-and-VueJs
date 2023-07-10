@@ -13,7 +13,7 @@
                     />
                 </div>
                 <p class="text-white opacity-80 text-[15px]">
-                    &copy; 2022 Laraveller.com All right reserved.
+                    &copy; 2023 Laraveller.com All right reserved.
                 </p>
             </div>
         </div>
