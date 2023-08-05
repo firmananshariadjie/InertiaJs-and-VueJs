@@ -129,7 +129,6 @@ console.log(imagePreview);
                                 type="file"
                                 class="mt-1 block w-full"
                                 @input="handleImageUpload"
-                                required
                             />
                             <InputLabel
                                 v-if="imagePreview"
